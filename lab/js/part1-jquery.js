@@ -170,6 +170,82 @@ var Stamen_TonerLite = L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/ton
 // This is a popular pattern that you'll run into in programs that run jQuery. It says not to run
 // the function passed to `ready` until the HTML document is fully loaded and all scripts have
 // been interpreted. It is, therefore, an example of asynchronous behavior.
+
 $(document).ready(function() {
   // Do your stuff here
+  // Task 1: changing labels
+  $("#main-heading").text('Philly Housing');
+  $("#text-label1").text('Housing Type');
+  $("#text-label2").text('Property Name');
+  $("#text-label3").text('Property Address');
+  $("#number-label").text('Year Built');
+  $("#checkbox-label1").text('Sale');
+  $("#checkbox-label2").text('Rent');
+  $("#color-label").text('Marker Color');
+
+  // Task 2: Setting (writing) input values
+  $("#text-input1").val('Luxury Apartment');
+  $("#text-input2").val('Evo Philly');
+  $("#text-input3").val('2930 Chestnut St');
+  $("#numeric-input").val('2015');
+  $("#cbox-input1").prop({'checked': true});
+  $("#cbox-input2").prop({'checked': false});
+  $("#color-input").val("#FF0000");
+
+  // Task 3: Getting (reading) input values
+  var input = function(){
+    var inputkey = ['#text-label1','#text-label2','#text-label3','#number-label','#checkbox-label1','#checkbox-label2','#color-label'];
+    var inputval = ['#text-input1','#text-input2','#text-input3','#numeric-input','#color-input'];
+    var checkbox = ['#cbox-input1','#cbox-input2'];
+    var keys = _.map(inputkey, function(each){return $(each).text();});
+    var vals = _.map(inputval, function(each){return $(each).val();});
+    var add = _.map(checkbox, function(each){return $(each).prop("checked");});
+    vals.splice(4,0,add[0],add[1]);
+    var all_input = {};
+    for (i=0;i<keys.length;i++){
+      all_input[keys[i]] = vals[i];
+    }
+    console.log(all_input);
+    return all_input;
+  };
+
+  // Task 4: Enable user interaction with the form
+  $("#text-input1").prop('disabled', false);
+  $("#text-input2").prop('disabled', false);
+  $("#text-input3").prop('disabled', false);
+  $("#numeric-input").prop('disabled', false);
+  $("#cbox-input1").prop('disabled', false);
+  $("#cbox-input2").prop('disabled', false);
+  $("#color-input").prop('disabled', false);
+
+  //Task 5: Add a button trigger to log this form's object to console
+  $("button").text('Get Result');
+  $("button").click(function() {
+    input();
+    marker();
+  });
+
+  // Task 6: Plot input data to the map on button click
+  $("#number-label2").text('Latitude');
+  $("#numeric-input2").val('39.953713');
+  $("#numeric-input2").prop('disabled', false);
+  $("#number-label3").text('Longitude');
+  $("#numeric-input3").val('-75.183253');
+  $("#numeric-input3").prop('disabled', false);
+
+  var marker = function(){
+    var markercolor = $("#color-input").val();
+    var description = $("#text-input2").val();
+    var latlng = [$('#numeric-input2').val(),$('#numeric-input3').val()];
+    var geojsonMarkerOptions = {
+      radius: 10,
+      fillColor: markercolor,
+      color: "#000",
+      weight: 1,
+      opacity: 1,
+      fillOpacity: 0.7
+    };
+    L.circleMarker(latlng, geojsonMarkerOptions).addTo(map).bindPopup(description).openPopup();
+  };
+  
 });
